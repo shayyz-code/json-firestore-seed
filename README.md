@@ -10,7 +10,7 @@ Useful for migrations, seeding test data, backups restore, data imports, and dev
 
 ## Features
 
-- Reads a JSON file (array of objects)
+- Reads a JSON file
 - Inserts each object into a Firestore collection
 - Automatically generates document IDs
 - Supports Firestore Timestamps
@@ -20,11 +20,7 @@ Useful for migrations, seeding test data, backups restore, data imports, and dev
 
 ### 1. Install Rust toolchain
 
-If not already installed:
-
-```bash
-https://rustup.rs
-```
+Follow guides via https://rust-lang.org/tools/install/
 
 ### 2. Clone and build
 
