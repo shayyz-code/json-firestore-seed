@@ -1,6 +1,6 @@
 # raccoon-firestore-entry
 
-![version](https://img.shields.io/badge/version-0.1.0-blue)
+![version](https://img.shields.io/badge/version-0.1.1-blue)
 ![rust](https://img.shields.io/badge/language-Rust-informational)
 ![license](https://img.shields.io/badge/license-Proprietary-red)
 
