@@ -1,8 +1,11 @@
+mod fs_ts;
+
 use clap::Parser;
 use colored::*;
 use firestore::*;
 use indicatif::{ProgressBar, ProgressStyle};
 use serde_json::Value;
+use std::collections::BTreeMap;
 use std::fs;
 
 #[derive(Parser)]
@@ -51,15 +54,36 @@ async fn main() -> anyhow::Result<()> {
     );
 
     for item in items {
-        // Create
-        let _: Value = db
-            .fluent()
-            .insert()
-            .into(&args.collection)
-            .generate_document_id()
-            .object(item)
-            .execute()
-            .await?;
+        // convert item Value -> FirestoreValue
+        let fs_value = fs_ts::json_to_firestore_value(item)?;
+
+        // need to pass a serializable object; the `object()` expects a &T where T: Serialize
+        // our top-level fs_value is likely an Object (map) — ensure that:
+        match fs_value {
+            fs_ts::FirestoreValue::Object(map) => {
+                let _: serde_json::Value = db
+                    .fluent()
+                    .insert()
+                    .into(&args.collection)
+                    .generate_document_id()
+                    .object(&map) // BTreeMap<String, FirestoreValue> implements Serialize through FirestoreValue::serialize
+                    .execute()
+                    .await?;
+            }
+            other => {
+                // If user provided non-object top-level, wrap into a doc with a field "value"
+                let mut wrapper = BTreeMap::new();
+                wrapper.insert("value".to_string(), other);
+                let _: serde_json::Value = db
+                    .fluent()
+                    .insert()
+                    .into(&args.collection)
+                    .generate_document_id()
+                    .object(&wrapper)
+                    .execute()
+                    .await?;
+            }
+        }
         bar.inc(1);
     }
 

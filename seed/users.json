@@ -1,4 +1,12 @@
 [
-  { "name": "Arkar", "age": 20 },
-  { "name": "Kyaw", "age": 18 }
+  {
+    "name": "Aung",
+    "created_at": { "__fire_ts_from_date__": "2024-11-11T11:21:56Z" },
+    "updated_at": "__fire_ts_now__"
+  },
+  {
+    "name": "Mayme",
+    "created_at": { "__fire_ts_from_date__": "2024-11-11T11:22:56Z" },
+    "updated_at": "__fire_ts_now__"
+  }
 ]

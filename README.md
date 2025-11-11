@@ -13,6 +13,7 @@ Useful for migrations, seeding test data, backups restore, data imports, and dev
 - Reads a JSON file (array of objects)
 - Inserts each object into a Firestore collection
 - Automatically generates document IDs
+- Supports Firestore Timestamps
 - Intended to use with Firebase **Service Account Credentials**
 
 ## Installation
@@ -59,8 +60,16 @@ in the same directory where you run the CLI.
 
 ```json
 [
-  { "name": "Aung", "age": 20 },
-  { "name": "Mya", "age": 18 }
+  {
+    "name": "Aung",
+    "created_at": { "__fire_ts_from_date__": "2024-11-11T11:21:56Z" },
+    "updated_at": "__fire_ts_now__"
+  },
+  {
+    "name": "Mayme",
+    "created_at": { "__fire_ts_from_date__": "2024-11-11T11:22:56Z" },
+    "updated_at": "__fire_ts_now__"
+  }
 ]
 ```
 

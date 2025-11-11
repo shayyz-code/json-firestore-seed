@@ -276,8 +276,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "145052bdd345b87320e369255277e3fb5152762ad123a901ef5c262dd38fe8d2"
 dependencies = [
  "iana-time-zone",
+ "js-sys",
  "num-traits",
  "serde",
+ "wasm-bindgen",
  "windows-link",
 ]
 
@@ -1394,9 +1396,10 @@ checksum = "69cdb34c158ceb288df11e18b4bd39de994f6657d83847bdffdbd7f346754b0f"
 
 [[package]]
 name = "raccoon-firestore-entry"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
+ "chrono",
  "clap",
  "colored",
  "firestore",
