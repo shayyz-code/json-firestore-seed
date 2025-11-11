@@ -1,3 +1,5 @@
+// Copyright (c) 2025 RustRaccoon Software Company Ltd.
+
 use chrono::{DateTime, Utc};
 use firestore::FirestoreTimestamp;
 use serde::ser::{SerializeMap, SerializeSeq};

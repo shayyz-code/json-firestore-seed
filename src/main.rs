@@ -1,3 +1,5 @@
+// Copyright (c) 2025 RustRaccoon Software Company Ltd.
+
 mod fs_ts;
 
 use clap::Parser;

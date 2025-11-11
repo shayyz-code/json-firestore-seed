@@ -496,6 +496,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "firestore-seed-rs"
+version = "0.1.2"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap",
+ "colored",
+ "firestore",
+ "indicatif",
+ "rustls",
+ "serde",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
 name = "flate2"
 version = "1.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1393,22 +1409,6 @@ name = "r-efi"
 version = "5.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "69cdb34c158ceb288df11e18b4bd39de994f6657d83847bdffdbd7f346754b0f"
-
-[[package]]
-name = "raccoon-firestore-entry"
-version = "0.1.1"
-dependencies = [
- "anyhow",
- "chrono",
- "clap",
- "colored",
- "firestore",
- "indicatif",
- "rustls",
- "serde",
- "serde_json",
- "tokio",
-]
 
 [[package]]
 name = "rand"

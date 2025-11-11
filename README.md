@@ -1,8 +1,8 @@
-# raccoon-firestore-entry
+# firestore-seed-rs
 
-![version](https://img.shields.io/badge/version-0.1.1-blue)
-![rust](https://img.shields.io/badge/language-Rust-informational)
-![license](https://img.shields.io/badge/license-Proprietary-red)
+![rust](https://img.shields.io/badge/rust-000000?logo=rust&logoColor=white)
+![release](https://img.shields.io/github/v/release/rustraccoon/firestore-seed-rs)
+![license](https://img.shields.io/badge/license-proprietary-red)
 
 A simple CLI tool to bulk-insert documents into **Google Firestore** from a **JSON file**.
 
@@ -18,23 +18,11 @@ Useful for migrations, seeding test data, backups restore, data imports, and dev
 
 ## Installation
 
-### 1. Install Rust toolchain
+### 1. Install the latest release
 
-Follow guides via https://rust-lang.org/tools/install/
+Download via https://github.com/rustraccoon/firestore-seed-rs/releases/latest
 
-### 2. Clone and build
-
-```bash
-git clone https://github.com/rustraccoon/raccoon-firebase-entry
-cd raccoon-firestore-entry
-cargo build --release
-```
-
-### 3. The executable will be here:
-
-```
-target/release/raccoon-firestore-entry
-```
+### 2. Rename back to firestore-seed-rs and export in Environment Variables.
 
 ## Authentication
 
@@ -72,7 +60,7 @@ in the same directory where you run the CLI.
 ## Usage
 
 ```bash
-raccoon-firestore-entry -j data.json -c users -p my-firestore-project
+firestore-seed-rs -j data.json -c users -p my-firestore-project
 ```
 
 ### Parameters
@@ -86,7 +74,7 @@ raccoon-firestore-entry -j data.json -c users -p my-firestore-project
 ## Example
 
 ```bash
-raccoon-firestore-entry \
+firestore-seed-rs \
   --json seed/users.json \
   --collection users \
   --project my-cool-app-prod
@@ -95,7 +83,7 @@ raccoon-firestore-entry \
 Output Example:
 
 ```
-Raccoon Firestore Entry
+Firestore Seed RS
 • Loading JSON from seed/users.json
 • Target collection: users (2 items)
 • Firestore project: my-cool-app-prod
@@ -107,6 +95,16 @@ Raccoon Firestore Entry
 
 - Documents get **auto-generated IDs**.
 - If you need `--id-field`, `--update`, or batch writes, open an issue or request enhancement.
+
+## How to Contribute
+
+Simply folk this repo, but make sure to let us know and grant permission.
+
+## Contributors
+
+Thanks goes to these wonderful people ✨
+
+![Contributors](https://contrib.rocks/image?repo=rustraccoon/firestore-seed-rs)
 
 ## License
 
