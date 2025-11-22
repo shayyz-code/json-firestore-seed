@@ -1,8 +1,8 @@
 [package]
-name = "firestore-seed-rs"
+name = "json-firestore-seed"
 version = "0.1.2"
 edition = "2024"
-authors = ["Aung Min Khant <aungminkhant.shay@gmail.com>", "RustRaccoon Software Company Ltd. <dev@rustraccoon.com>"]
+authors = ["Aung Min Khant <aungminkhant.shay@gmail.com>"]
 
 [dependencies]
 clap = { version = "4.5.51", features = ["derive"] }

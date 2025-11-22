@@ -24,7 +24,7 @@ struct Args {
 async fn main() -> anyhow::Result<()> {
     println!(
         "{}",
-        "Raccoon Firebase Entry".custom_color((63, 71, 255)).bold()
+        "JSON Firestore Seed".custom_color((63, 71, 255)).bold()
     );
 
     let args = Args::parse();

@@ -1,8 +1,8 @@
-# firestore-seed-rs
+# json-firestore-seed
 
 ![rust](https://img.shields.io/badge/rust-000000?logo=rust&logoColor=white)
-![release](https://img.shields.io/github/v/release/rustraccoon/firestore-seed-rs)
-![license](https://img.shields.io/badge/license-proprietary-red)
+![MIT](https://img.shields.io/badge/MIT-green?style=for-the-badge)
+![release](https://img.shields.io/github/v/release/shayyz-code/json-firestore-seed)
 
 A simple CLI tool to bulk-insert documents into **Google Firestore** from a **JSON file**.
 
@@ -20,9 +20,9 @@ Useful for migrations, seeding test data, backups restore, data imports, and dev
 
 ### 1. Install the latest release
 
-Download via https://github.com/rustraccoon/firestore-seed-rs/releases/latest
+Download via https://github.com/rustraccoon/json-firestore-seed/releases/latest
 
-### 2. Rename back to firestore-seed-rs and export in Environment Variables.
+### 2. Rename back to json-firestore-seed and export in Environment Variables.
 
 ## Authentication
 
@@ -60,7 +60,7 @@ in the same directory where you run the CLI.
 ## Usage
 
 ```bash
-firestore-seed-rs -j data.json -c users -p my-firestore-project
+json-firestore-seed -j data.json -c users -p my-firestore-project
 ```
 
 ### Parameters
@@ -74,7 +74,7 @@ firestore-seed-rs -j data.json -c users -p my-firestore-project
 ## Example
 
 ```bash
-firestore-seed-rs \
+json-firestore-seed \
   --json seed/users.json \
   --collection users \
   --project my-cool-app-prod
@@ -83,7 +83,7 @@ firestore-seed-rs \
 Output Example:
 
 ```
-Firestore Seed RS
+JSON Firestore Seed
 • Loading JSON from seed/users.json
 • Target collection: users (2 items)
 • Firestore project: my-cool-app-prod
@@ -104,10 +104,10 @@ Simply folk this repo, but make sure to let us know and grant permission.
 
 Thanks goes to these wonderful people ✨
 
-![Contributors](https://contrib.rocks/image?repo=rustraccoon/firestore-seed-rs)
+![Contributors](https://contrib.rocks/image?repo=shayyz-code/json-firestore-seed)
 
 ## License
 
-This project is proprietary. Do not redistribute without permission.
+MIT License — free for personal & commercial use.
 
-Copyright (c) 2025 RustRaccoon Software Company Ltd.
+Copyright (c) 2025 shayyz-code.

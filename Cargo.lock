@@ -496,22 +496,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "firestore-seed-rs"
-version = "0.1.2"
-dependencies = [
- "anyhow",
- "chrono",
- "clap",
- "colored",
- "firestore",
- "indicatif",
- "rustls",
- "serde",
- "serde_json",
- "tokio",
-]
-
-[[package]]
 name = "flate2"
 version = "1.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1072,6 +1056,22 @@ checksum = "b011eec8cc36da2aab2d5cff675ec18454fad408585853910a202391cf9f8e65"
 dependencies = [
  "once_cell",
  "wasm-bindgen",
+]
+
+[[package]]
+name = "json-firestore-seed"
+version = "0.1.2"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap",
+ "colored",
+ "firestore",
+ "indicatif",
+ "rustls",
+ "serde",
+ "serde_json",
+ "tokio",
 ]
 
 [[package]]
