@@ -26,6 +26,10 @@ struct Args {
     id_field: Option<String>,
     #[arg(long, short = 'd')]
     dry_run: bool,
+    #[arg(long, short = 'm', default_value = "4")]
+    concurrency: usize,
+    #[arg(long, short = 'r', default_value = "3")]
+    retries: usize,
 }
 
 #[tokio::main]
@@ -84,60 +88,98 @@ async fn run() -> Result<()> {
             .progress_chars("█░-"),
     );
 
-    for item in items {
-        let fs_value = fs_ts::json_to_firestore_value(item)?;
+use futures::stream::{self, StreamExt};
+use std::sync::Arc;
+use tokio_retry::strategy::{ExponentialBackoff, jitter};
+use tokio_retry::Retry;
 
-        let builder = db.fluent().insert().into(&args.collection);
+// ... inside run() function after bar initialization ...
 
-        let id = if let Some(ref field) = args.id_field {
-            item.get(field)
-                .and_then(|v| {
-                    v.as_str()
-                        .map(|s| s.to_string())
-                        .or_else(|| v.as_i64().map(|i| i.to_string()))
+    let db = Arc::new(db);
+    let bar = Arc::new(bar);
+    let args = Arc::new(args);
+
+    let results = stream::iter(items)
+        .map(|item| {
+            let db = Arc::clone(&db);
+            let bar = Arc::clone(&bar);
+            let args = Arc::clone(&args);
+
+            async move {
+                let fs_value = fs_ts::json_to_firestore_value(item)?;
+
+                let id = if let Some(ref field) = args.id_field {
+                    item.get(field)
+                        .and_then(|v| {
+                            v.as_str()
+                                .map(|s| s.to_string())
+                                .or_else(|| v.as_i64().map(|i| i.to_string()))
+                        })
+                        .ok_or_else(|| {
+                            SeedError::ValidationError(format!(
+                                "ID field '{}' not found or invalid (must be string or int) in item",
+                                field
+                            ))
+                        })?
+                } else {
+                    "(generated)".to_string()
+                };
+
+                if args.dry_run {
+                    println!(
+                        "\n{} {}\n{}",
+                        "--- Dry Run: Document ID:".bold().yellow(),
+                        id.cyan(),
+                        serde_json::to_string_pretty(&fs_value).map_err(|e| SeedError::ValidationError(e.to_string()))?
+                    );
+                    bar.inc(1);
+                    return Ok(());
+                }
+
+                let retry_strategy = ExponentialBackoff::from_millis(100)
+                    .map(jitter)
+                    .take(args.retries);
+
+                Retry::spawn(retry_strategy, || {
+                    let db = Arc::clone(&db);
+                    let args = Arc::clone(&args);
+                    let fs_value = fs_value.clone();
+                    let id = id.clone();
+
+                    async move {
+                        let builder = db.fluent().insert().into(&args.collection);
+                        let fluent = if id == "(generated)" {
+                            builder.generate_document_id()
+                        } else {
+                            builder.document_id(id)
+                        };
+
+                        match fs_value {
+                            fs_ts::FirestoreValue::Object(map) => fluent.object(&map).execute::<Value>().await,
+                            other => {
+                                let mut wrapper = BTreeMap::new();
+                                wrapper.insert("value".to_string(), other);
+                                fluent.object(&wrapper).execute::<Value>().await
+                            }
+                        }
+                    }
                 })
-                .ok_or_else(|| {
-                    SeedError::ValidationError(format!(
-                        "ID field '{}' not found or invalid (must be string or int) in item",
-                        field
-                    ))
-                })?
-        } else {
-            "(generated)".to_string()
-        };
+                .await
+                .map_err(|e| SeedError::FirestoreWrite {
+                    collection: args.collection.clone(),
+                    source: e,
+                })?;
 
-        if args.dry_run {
-            println!(
-                "\n{} {}\n{}",
-                "--- Dry Run: Document ID:".bold().yellow(),
-                id.cyan(),
-                serde_json::to_string_pretty(&fs_value).map_err(|e| SeedError::ValidationError(e.to_string()))?
-            );
-            bar.inc(1);
-            continue;
-        }
-
-        let fluent = if id == "(generated)" {
-            builder.generate_document_id()
-        } else {
-            builder.document_id(id.clone())
-        };
-
-        let result = match fs_value {
-            fs_ts::FirestoreValue::Object(map) => fluent.object(&map).execute::<Value>().await,
-            other => {
-                let mut wrapper = BTreeMap::new();
-                wrapper.insert("value".to_string(), other);
-                fluent.object(&wrapper).execute::<Value>().await
+                bar.inc(1);
+                Ok(())
             }
-        };
+        })
+        .buffer_unordered(args.concurrency)
+        .collect::<Vec<Result<()>>>()
+        .await;
 
-        result.map_err(|e| SeedError::FirestoreWrite {
-            collection: args.collection.clone(),
-            source: e,
-        })?;
-
-        bar.inc(1);
+    for res in results {
+        res?;
     }
 
     bar.finish_with_message("Done");
