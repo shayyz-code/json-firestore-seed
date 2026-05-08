@@ -20,8 +20,10 @@ struct Args {
     collection: String,
     #[arg(long, short)]
     project: String,
-    #[arg(long, short, default_value = "./application_default_credentials.json")]
+    #[arg(long, short = 'k', default_value = "./application_default_credentials.json")]
     credentials: String,
+    #[arg(long, short = 'i')]
+    id_field: Option<String>,
 }
 
 #[tokio::main]
@@ -83,7 +85,26 @@ async fn run() -> Result<()> {
     for item in items {
         let fs_value = fs_ts::json_to_firestore_value(item)?;
 
-        let fluent = db.fluent().insert().into(&args.collection).generate_document_id();
+        let builder = db.fluent().insert().into(&args.collection);
+
+        let fluent = if let Some(ref field) = args.id_field {
+            let id = item
+                .get(field)
+                .and_then(|v| {
+                    v.as_str()
+                        .map(|s| s.to_string())
+                        .or_else(|| v.as_i64().map(|i| i.to_string()))
+                })
+                .ok_or_else(|| {
+                    SeedError::ValidationError(format!(
+                        "ID field '{}' not found or invalid (must be string or int) in item",
+                        field
+                    ))
+                })?;
+            builder.document_id(id)
+        } else {
+            builder.generate_document_id()
+        };
 
         let result = match fs_value {
             fs_ts::FirestoreValue::Object(map) => fluent.object(&map).execute::<Value>().await,

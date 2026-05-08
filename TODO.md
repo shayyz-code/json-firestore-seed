@@ -21,7 +21,7 @@
 
 ## Product and UX
 
-- [ ] Add `--id-field` support for deterministic Firestore document IDs.
+- [x] Add `--id-field` support for deterministic Firestore document IDs.
 - [ ] Add `--dry-run` mode to preview transformed documents before writes.
 - [ ] Add configurable write concurrency and retry/backoff options.
 - [ ] Add `--batch-size` support to reduce write pressure and improve throughput control.

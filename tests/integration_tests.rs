@@ -48,3 +48,16 @@ fn test_empty_collection_error() {
        .failure()
        .stderr(predicate::str::contains("Collection name cannot be empty"));
 }
+
+#[test]
+fn test_missing_id_field_error() {
+    let mut cmd = Command::cargo_bin("json-firestore-seed").unwrap();
+    cmd.arg("--json").arg("tests/fixtures/valid_users.json")
+       .arg("--collection").arg("test")
+       .arg("--project").arg("test-project")
+       .arg("--id-field").arg("non_existent_field");
+
+    cmd.assert()
+       .failure()
+       .stderr(predicate::str::contains("ID field 'non_existent_field' not found or invalid"));
+}
