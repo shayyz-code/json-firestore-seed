@@ -1,0 +1,46 @@
+# .goreleaser.yaml
+version: 2
+
+project_name: json-firestore-seed
+
+before:
+  hooks:
+    - cargo --version
+
+rusts:
+  - targets:
+      - x86_64-unknown-linux-gnu
+      - x86_64-apple-darwin
+      - aarch64-apple-darwin
+      - x86_64-pc-windows-msvc
+    bin: json-firestore-seed
+
+archives:
+  - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+# Future Homebrew and NPM configurations can be added here
+# brew:
+#   repository:
+#     owner: YOUR_GITHUB_USERNAME
+#     name: homebrew-tap
+#
+# nfps:
+#   - id: npm
+#     formats: [ deb, rpm ] # npm uses nfps/goreleaser-pro features for actual npm publish or custom scripts
