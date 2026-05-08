@@ -1,0 +1,19 @@
+[
+  {
+    "id": 1,
+    "name": "Alice",
+    "email": "alice@example.com",
+    "created_at": "__fire_ts_now__",
+    "profile": {
+      "bio": "Rust enthusiast",
+      "joined_date": { "__fire_ts_from_date__": "2023-01-01 00:00:00" }
+    }
+  },
+  {
+    "id": 2,
+    "name": "Bob",
+    "email": "bob@example.com",
+    "tags": ["developer", "cloud"],
+    "last_login": { "__fire_ts_from_date__": "2024-05-09T12:00:00Z" }
+  }
+]

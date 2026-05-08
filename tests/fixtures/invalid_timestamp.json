@@ -1,0 +1,6 @@
+[
+  {
+    "name": "Invalid Date",
+    "date": { "__fire_ts_from_date__": "invalid-date-format" }
+  }
+]

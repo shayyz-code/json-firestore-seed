@@ -1,7 +1,9 @@
 // Copyright (c) 2025 RustRaccoon Software Company Ltd.
 
+mod error;
 mod fs_ts;
 
+use crate::error::{SeedError, Result};
 use clap::Parser;
 use colored::*;
 use firestore::*;
@@ -18,10 +20,19 @@ struct Args {
     collection: String,
     #[arg(long, short)]
     project: String,
+    #[arg(long, short, default_value = "./application_default_credentials.json")]
+    credentials: String,
 }
 
 #[tokio::main]
-async fn main() -> anyhow::Result<()> {
+async fn main() {
+    if let Err(e) = run().await {
+        eprintln!("{} {}", "Error:".red().bold(), e);
+        std::process::exit(1);
+    }
+}
+
+async fn run() -> Result<()> {
     println!(
         "{}",
         "JSON Firestore Seed".custom_color((63, 71, 255)).bold()
@@ -29,11 +40,22 @@ async fn main() -> anyhow::Result<()> {
 
     let args = Args::parse();
 
+    // Early validation
+    if args.collection.is_empty() {
+        return Err(SeedError::ValidationError("Collection name cannot be empty".into()));
+    }
+    if args.project.is_empty() {
+        return Err(SeedError::ValidationError("Project ID cannot be empty".into()));
+    }
+
     println!("{} {}", "• Loading JSON from".bold(), args.json.blue());
 
-    let raw = fs::read_to_string(&args.json)?;
+    let raw = fs::read_to_string(&args.json).map_err(|e| SeedError::FileNotFound {
+        path: args.json.clone(),
+        source: e,
+    })?;
     let data: Value = serde_json::from_str(&raw)?;
-    let items = data.as_array().expect("JSON must be an array");
+    let items = data.as_array().ok_or(SeedError::NotAJsonArray)?;
 
     println!(
         "{} {} {}",
@@ -44,48 +66,39 @@ async fn main() -> anyhow::Result<()> {
 
     let db = FirestoreDb::with_options_service_account_key_file(
         FirestoreDbOptions::new(args.project.clone()),
-        "./application_default_credentials.json".into(),
+        args.credentials.clone().into(),
     )
-    .await?;
+    .await
+    .map_err(|e| SeedError::AuthError(e.to_string()))?;
 
     println!("{} {}", "• Firestore project:".bold(), args.project.cyan());
 
     let bar = ProgressBar::new(items.len() as u64);
     bar.set_style(
-        ProgressStyle::with_template("{bar:40.cyan/blue} {pos}/{len} {msg}")?.progress_chars("█░-"),
+        ProgressStyle::with_template("{bar:40.cyan/blue} {pos}/{len} {msg}")
+            .map_err(|e| SeedError::ValidationError(format!("Failed to set progress bar style: {}", e)))?
+            .progress_chars("█░-"),
     );
 
     for item in items {
-        // convert item Value -> FirestoreValue
         let fs_value = fs_ts::json_to_firestore_value(item)?;
 
-        // need to pass a serializable object; the `object()` expects a &T where T: Serialize
-        // our top-level fs_value is likely an Object (map) — ensure that:
-        match fs_value {
-            fs_ts::FirestoreValue::Object(map) => {
-                let _: serde_json::Value = db
-                    .fluent()
-                    .insert()
-                    .into(&args.collection)
-                    .generate_document_id()
-                    .object(&map) // BTreeMap<String, FirestoreValue> implements Serialize through FirestoreValue::serialize
-                    .execute()
-                    .await?;
-            }
+        let fluent = db.fluent().insert().into(&args.collection).generate_document_id();
+
+        let result = match fs_value {
+            fs_ts::FirestoreValue::Object(map) => fluent.object(&map).execute::<Value>().await,
             other => {
-                // If user provided non-object top-level, wrap into a doc with a field "value"
                 let mut wrapper = BTreeMap::new();
                 wrapper.insert("value".to_string(), other);
-                let _: serde_json::Value = db
-                    .fluent()
-                    .insert()
-                    .into(&args.collection)
-                    .generate_document_id()
-                    .object(&wrapper)
-                    .execute()
-                    .await?;
+                fluent.object(&wrapper).execute::<Value>().await
             }
-        }
+        };
+
+        result.map_err(|e| SeedError::FirestoreWrite {
+            collection: args.collection.clone(),
+            source: e,
+        })?;
+
         bar.inc(1);
     }
 
@@ -97,7 +110,7 @@ async fn main() -> anyhow::Result<()> {
         items.len().to_string().bold().cyan(),
         format!(
             "{} successfully.",
-            if !items.is_empty() {
+            if items.len() != 1 {
                 "documents"
             } else {
                 "document"

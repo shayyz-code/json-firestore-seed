@@ -2,10 +2,10 @@
 
 ## High Priority
 
-- [ ] Add structured error types and user-friendly failure messages for auth, JSON parsing, and Firestore write failures.
-- [ ] Add unit tests for `json_to_firestore_value` timestamp parsing and marker handling.
-- [ ] Add integration test fixture(s) for valid and invalid JSON payloads.
-- [ ] Add `--credentials` flag to support custom service-account key file path.
+- [x] Add structured error types and user-friendly failure messages for auth, JSON parsing, and Firestore write failures.
+- [x] Add unit tests for `json_to_firestore_value` timestamp parsing and marker handling.
+- [x] Add integration test fixture(s) for valid and invalid JSON payloads.
+- [x] Add `--credentials` flag to support custom service-account key file path.
 - [ ] Validate CLI inputs early (empty collection/project, missing file, non-array JSON).
 
 ## CI/CD
