@@ -97,7 +97,7 @@ async fn main() -> anyhow::Result<()> {
         items.len().to_string().bold().cyan(),
         format!(
             "{} successfully.",
-            if items.len() > 0 {
+            if !items.is_empty() {
                 "documents"
             } else {
                 "document"
