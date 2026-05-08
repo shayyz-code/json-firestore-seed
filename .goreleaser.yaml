@@ -35,12 +35,13 @@ changelog:
       - "^docs:"
       - "^test:"
 
-# Future Homebrew and NPM configurations can be added here
-# brew:
-#   repository:
-#     owner: YOUR_GITHUB_USERNAME
-#     name: homebrew-tap
-#
-# nfps:
-#   - id: npm
-#     formats: [ deb, rpm ] # npm uses nfps/goreleaser-pro features for actual npm publish or custom scripts
+brews:
+  - name: json-firestore-seed
+    repository:
+      owner: shayyz-code
+      name: homebrew-tap
+    directory: Formula
+    homepage: "https://github.com/{{ .Env.GITHUB_REPOSITORY }}"
+    description: "Seed Firestore with JSON data easily."
+    install: |
+      bin.install "json-firestore-seed"

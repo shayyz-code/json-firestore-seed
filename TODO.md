@@ -6,7 +6,7 @@
 - [x] Add unit tests for `json_to_firestore_value` timestamp parsing and marker handling.
 - [x] Add integration test fixture(s) for valid and invalid JSON payloads.
 - [x] Add `--credentials` flag to support custom service-account key file path.
-- [ ] Validate CLI inputs early (empty collection/project, missing file, non-array JSON).
+- [x] Validate CLI inputs early (empty collection/project, missing file, non-array JSON).
 
 ## CI/CD
 
@@ -15,7 +15,8 @@
 - [ ] Add dependency and security scanning (`cargo audit`, `cargo deny`) in CI.
 - [x] Add automated changelog generation for releases.
 - [x] Add Release workflow with GoReleaser.
-- [ ] Publish to npm and homebrew.
+- [x] Configure Homebrew tap in GoReleaser.
+- [ ] Complete NPM publishing strategy (wrapper package).
 - [ ] Add crate publish pipeline (optional) for `crates.io` releases.
 
 ## Product and UX

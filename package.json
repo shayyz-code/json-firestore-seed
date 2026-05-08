@@ -1,0 +1,24 @@
+{
+  "name": "json-firestore-seed",
+  "version": "0.1.3",
+  "description": "Seed Firestore with JSON data easily.",
+  "bin": {
+    "json-firestore-seed": "bin/json-firestore-seed"
+  },
+  "scripts": {
+    "postinstall": "node scripts/install.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shayyz-code/json-firestore-seed.git"
+  },
+  "keywords": [
+    "firestore",
+    "firebase",
+    "seed",
+    "json",
+    "rust"
+  ],
+  "author": "Aung Min Khant <aungminkhant.shay@gmail.com>",
+  "license": "MIT"
+}
