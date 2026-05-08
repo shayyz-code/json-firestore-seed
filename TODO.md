@@ -14,6 +14,8 @@
 - [x] Add GitHub Actions CD workflow to build and publish release binaries on version tags.
 - [ ] Add dependency and security scanning (`cargo audit`, `cargo deny`) in CI.
 - [ ] Add automated changelog generation for releases.
+- [ ] Add Release workflow with GoReleaser.
+- [ ] Publish to npm and homebrew.
 - [ ] Add crate publish pipeline (optional) for `crates.io` releases.
 
 ## Product and UX
