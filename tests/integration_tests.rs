@@ -61,3 +61,18 @@ fn test_missing_id_field_error() {
        .failure()
        .stderr(predicate::str::contains("ID field 'non_existent_field' not found or invalid"));
 }
+
+#[test]
+fn test_dry_run_output() {
+    let mut cmd = Command::cargo_bin("json-firestore-seed").unwrap();
+    cmd.arg("--json").arg("tests/fixtures/valid_users.json")
+       .arg("--collection").arg("test")
+       .arg("--project").arg("test-project")
+       .arg("--dry-run");
+
+    cmd.assert()
+       .success()
+       .stdout(predicate::str::contains("Dry Run: Document ID"))
+       .stdout(predicate::str::contains("Alice"))
+       .stdout(predicate::str::contains("Bob"));
+}

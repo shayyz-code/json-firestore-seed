@@ -24,6 +24,8 @@ struct Args {
     credentials: String,
     #[arg(long, short = 'i')]
     id_field: Option<String>,
+    #[arg(long, short = 'd')]
+    dry_run: bool,
 }
 
 #[tokio::main]
@@ -87,9 +89,8 @@ async fn run() -> Result<()> {
 
         let builder = db.fluent().insert().into(&args.collection);
 
-        let fluent = if let Some(ref field) = args.id_field {
-            let id = item
-                .get(field)
+        let id = if let Some(ref field) = args.id_field {
+            item.get(field)
                 .and_then(|v| {
                     v.as_str()
                         .map(|s| s.to_string())
@@ -100,10 +101,26 @@ async fn run() -> Result<()> {
                         "ID field '{}' not found or invalid (must be string or int) in item",
                         field
                     ))
-                })?;
-            builder.document_id(id)
+                })?
         } else {
+            "(generated)".to_string()
+        };
+
+        if args.dry_run {
+            println!(
+                "\n{} {}\n{}",
+                "--- Dry Run: Document ID:".bold().yellow(),
+                id.cyan(),
+                serde_json::to_string_pretty(&fs_value).map_err(|e| SeedError::ValidationError(e.to_string()))?
+            );
+            bar.inc(1);
+            continue;
+        }
+
+        let fluent = if id == "(generated)" {
             builder.generate_document_id()
+        } else {
+            builder.document_id(id.clone())
         };
 
         let result = match fs_value {
