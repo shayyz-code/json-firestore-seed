@@ -1,2 +1,5 @@
 /target
 application_default_credentials.json
+
+# MacOS
+.DS_Store
