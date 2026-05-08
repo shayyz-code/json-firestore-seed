@@ -37,6 +37,8 @@ changelog:
 
 brews:
   - name: json-firestore-seed
+    # NOTE: To push to a separate repository (tap), you must use a GitHub 
+    # Personal Access Token (PAT) with `repo` scope instead of the default GITHUB_TOKEN.
     repository:
       owner: shayyz-code
       name: homebrew-tap
