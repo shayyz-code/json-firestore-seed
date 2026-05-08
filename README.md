@@ -1,8 +1,8 @@
-# json-firestore-seed
-
-![rust](https://img.shields.io/badge/rust-000000?logo=rust&logoColor=white)
+![rust](https://img.shields.io/badge/rust-000000?logo=rust&logoColor=white&style=for-the-badge)
 ![MIT](https://img.shields.io/badge/MIT-green?style=for-the-badge)
-![release](https://img.shields.io/github/v/release/shayyz-code/json-firestore-seed)
+![release](https://img.shields.io/github/v/release/shayyz-code/json-firestore-seed?style=for-the-badge)
+
+# JSON Firestore Seed
 
 A simple CLI tool to bulk-insert documents into **Google Firestore** from a **JSON file**.
 
@@ -20,7 +20,7 @@ Useful for migrations, seeding test data, backups restore, data imports, and dev
 
 ### 1. Install the latest release
 
-Download via https://github.com/rustraccoon/json-firestore-seed/releases/latest
+Download via https://github.com/shayyz-code/json-firestore-seed/releases/latest
 
 ### 2. Rename back to json-firestore-seed and export in Environment Variables.
 
@@ -50,7 +50,7 @@ in the same directory where you run the CLI.
     "updated_at": "__fire_ts_now__"
   },
   {
-    "name": "Mayme",
+    "name": "Min",
     "created_at": { "__fire_ts_from_date__": "2024-11-11T11:22:56Z" },
     "updated_at": "__fire_ts_now__"
   }
