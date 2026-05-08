@@ -90,24 +90,22 @@ pub fn json_to_firestore_value(v: &Value) -> Result<FirestoreValue, anyhow::Erro
         Value::Object(map) => {
             // Check if this object is a timestamp marker like:
             // { "__fire_ts_from_date__": "2023-..." }
-            if map.len() == 1 {
-                if let Some(vt) = map.get("__fire_ts_from_date__") {
-                    if let Value::String(s) = vt {
-                        // parse RFC3339 (and common variants)
-                        // try chrono parse
-                        let dt = DateTime::parse_from_rfc3339(s)
-                            .map(|dt| dt.with_timezone(&Utc))
-                            .or_else(|_| {
-                                // try parse with chrono naive fallback (YYYY-mm-dd HH:MM:SS)
-                                chrono::NaiveDateTime::parse_from_str(s, "%Y-%m-%d %H:%M:%S")
-                                    .map(|ndt| DateTime::<Utc>::from_naive_utc_and_offset(ndt, Utc))
-                            })
-                            .map_err(|e| {
-                                anyhow::anyhow!("failed to parse timestamp string `{}`: {}", s, e)
-                            })?;
-                        return Ok(Timestamp(FirestoreTimestamp(dt)));
-                    }
-                }
+            if map.len() == 1
+                && let Some(Value::String(s)) = map.get("__fire_ts_from_date__")
+            {
+                // parse RFC3339 (and common variants)
+                // try chrono parse
+                let dt = DateTime::parse_from_rfc3339(s)
+                    .map(|dt| dt.with_timezone(&Utc))
+                    .or_else(|_| {
+                        // try parse with chrono naive fallback (YYYY-mm-dd HH:MM:SS)
+                        chrono::NaiveDateTime::parse_from_str(s, "%Y-%m-%d %H:%M:%S")
+                            .map(|ndt| DateTime::<Utc>::from_naive_utc_and_offset(ndt, Utc))
+                    })
+                    .map_err(|e| {
+                        anyhow::anyhow!("failed to parse timestamp string `{}`: {}", s, e)
+                    })?;
+                return Ok(Timestamp(FirestoreTimestamp(dt)));
             }
 
             // otherwise normal object -> recursively convert
