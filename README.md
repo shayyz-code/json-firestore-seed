@@ -30,6 +30,14 @@ If you have Rust installed, you can install with cargo:
 cargo install json-firestore-seed
 ```
 
+### Via Shell Script (Linux/macOS)
+
+For a quick one-liner installation:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/shayyz-code/json-firestore-seed/master/scripts/install.sh | sh
+```
+
 ### Via Homebrew
 
 ```bash
