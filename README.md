@@ -1,15 +1,9 @@
 <h1 align="center">JSON Firestore Seed</h1>
 
 <p align="center">
-  <a href="https://www.rust-lang.org">
-    <img src="https://img.shields.io/badge/rust-000000?logo=rust&logoColor=white&style=for-the-badge" alt="Rust" />
-  </a>
-  <a href="LICENSE">
-    <img src="https://img.shields.io/badge/MIT-green?style=for-the-badge" alt="MIT" />
-  </a>
-  <a href="https://github.com/shayyz-code/json-firestore-seed/releases/latest">
-    <img src="https://img.shields.io/github/v/release/shayyz-code/json-firestore-seed?style=for-the-badge" alt="Release" />
-  </a>
+  <a href="https://www.rust-lang.org"><img src="https://img.shields.io/badge/rust-000000?logo=rust&logoColor=white&style=for-the-badge" alt="Rust" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/MIT-green?style=for-the-badge" alt="MIT" /></a>
+  <a href="https://github.com/shayyz-code/json-firestore-seed/releases/latest"><img src="https://img.shields.io/github/v/release/shayyz-code/json-firestore-seed?style=for-the-badge" alt="Release" /></a>
 </p>
 
 <p align="center">
