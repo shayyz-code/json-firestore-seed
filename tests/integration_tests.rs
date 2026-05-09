@@ -18,7 +18,8 @@ fn test_invalid_timestamp_error() {
     let mut cmd = Command::cargo_bin("json-firestore-seed").unwrap();
     cmd.arg("--json").arg("tests/fixtures/invalid_timestamp.json")
        .arg("--collection").arg("test")
-       .arg("--project").arg("test-project");
+       .arg("--project").arg("test-project")
+       .arg("--dry-run");
 
     cmd.assert()
        .failure()
@@ -55,7 +56,8 @@ fn test_missing_id_field_error() {
     cmd.arg("--json").arg("tests/fixtures/valid_users.json")
        .arg("--collection").arg("test")
        .arg("--project").arg("test-project")
-       .arg("--id-field").arg("non_existent_field");
+       .arg("--id-field").arg("non_existent_field")
+       .arg("--dry-run");
 
     cmd.assert()
        .failure()
@@ -68,6 +70,22 @@ fn test_dry_run_output() {
     cmd.arg("--json").arg("tests/fixtures/valid_users.json")
        .arg("--collection").arg("test")
        .arg("--project").arg("test-project")
+       .arg("--dry-run");
+
+    cmd.assert()
+       .success()
+       .stdout(predicate::str::contains("Dry Run: Document ID"))
+       .stdout(predicate::str::contains("Alice"))
+       .stdout(predicate::str::contains("Bob"));
+}
+
+#[test]
+fn test_batch_size_dry_run() {
+    let mut cmd = Command::cargo_bin("json-firestore-seed").unwrap();
+    cmd.arg("--json").arg("tests/fixtures/valid_users.json")
+       .arg("--collection").arg("test")
+       .arg("--project").arg("test-project")
+       .arg("--batch-size").arg("2")
        .arg("--dry-run");
 
     cmd.assert()

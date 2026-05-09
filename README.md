@@ -4,58 +4,53 @@
 
 # JSON Firestore Seed
 
-A simple CLI tool to bulk-insert documents into **Google Firestore** from a **JSON file**.
+A high-performance CLI tool to bulk-insert documents into **Google Firestore** from a **JSON file**.
 
 Useful for migrations, seeding test data, backups restore, data imports, and development workflows.
 
 ## Features
 
-- Reads a JSON file
-- Inserts each object into a Firestore collection
-- Automatically generates document IDs
-- Supports Firestore Timestamps
-- Intended to use with Firebase **Service Account Credentials**
+- **Fast**: Parallel insertions with configurable concurrency.
+- **Efficient**: Support for Firestore **Batch Writes** to reduce write pressure.
+- **Flexible**: Specify document IDs via a field or let Firestore auto-generate them.
+- **Safe**: Preview transformations with `--dry-run` mode.
+- **Robust**: Automatic retries with exponential backoff for transient failures.
+- **Timestamps**: Native support for Firestore Timestamps using special markers.
 
 ## Installation
 
-### 1. Install the latest release
+### Via Cargo (Recommended)
 
-Download via https://github.com/shayyz-code/json-firestore-seed/releases/latest
+If you have Rust installed, you can install directly from source:
 
-### 2. Rename back to json-firestore-seed and export in Environment Variables.
+```bash
+cargo install --path .
+```
+
+### Via Homebrew (Coming Soon)
+
+```bash
+brew tap shayyz-code/tap
+brew install json-firestore-seed
+```
+
+### Via NPM (Coming Soon)
+
+```bash
+npm install -g json-firestore-seed
+```
+
+### Via GitHub Releases
+
+Download the latest binary for your platform from the [Releases](https://github.com/shayyz-code/json-firestore-seed/releases/latest) page.
 
 ## Authentication
 
-Download your Firebase **Service Account Key**:
+By default, the tool looks for a service account key file named `application_default_credentials.json` in the current directory.
 
-1. Firebase Console → Project Settings → **Service Accounts**
-2. Click **Generate new private key**
-3. Save it as:
-
-```
-application_default_credentials.json
-```
-
-in the same directory where you run the CLI.
-
-## JSON Format
-
-`data.json` **must be an array**:
-
-```json
-[
-  {
-    "name": "Aung",
-    "created_at": { "__fire_ts_from_date__": "2024-11-11T11:21:56Z" },
-    "updated_at": "__fire_ts_now__"
-  },
-  {
-    "name": "Min",
-    "created_at": { "__fire_ts_from_date__": "2024-11-11T11:22:56Z" },
-    "updated_at": "__fire_ts_now__"
-  }
-]
-```
+1.  Firebase Console → Project Settings → **Service Accounts**
+2.  Click **Generate new private key**
+3.  Save it and provide the path using the `-k` or `--credentials` flag.
 
 ## Usage
 
@@ -65,46 +60,60 @@ json-firestore-seed -j data.json -c users -p my-firestore-project
 
 ### Parameters
 
-| Flag | Long Form      | Description               |
-| ---- | -------------- | ------------------------- |
-| `-j` | `--json`       | Path to JSON file         |
-| `-c` | `--collection` | Firestore collection name |
-| `-p` | `--project`    | Firestore project ID      |
+| Flag | Long Form        | Default                                 | Description                                     |
+| ---- | ---------------- | --------------------------------------- | ----------------------------------------------- |
+| `-j` | `--json`         | (required)                              | Path to JSON file (must be an array)            |
+| `-c` | `--collection`   | (required)                              | Target Firestore collection name                |
+| `-p` | `--project`      | (required)                              | Google Cloud Project ID                         |
+| `-k` | `--credentials`  | `./application_default_credentials.json` | Path to service account JSON key file           |
+| `-i` | `--id-field`     | (auto-generate)                         | Field in JSON to use as document ID             |
+| `-d` | `--dry-run`      | `false`                                 | Preview transformations without writing         |
+| `-m` | `--concurrency`  | `4`                                     | Number of parallel write tasks                  |
+| `-r` | `--retries`      | `3`                                     | Number of retries for failed writes             |
+| `-b` | `--batch-size`   | `1`                                     | Items per Firestore batch (max 500)             |
 
-## Example
+## JSON Format & Timestamps
 
-```bash
-json-firestore-seed \
-  --json seed/users.json \
-  --collection users \
-  --project my-cool-app-prod
+The input JSON must be an array of objects.
+
+### Firestore Timestamp Markers
+
+-   `__fire_ts_now__`: Sets the field to the current server time.
+-   `{ "__fire_ts_from_date__": "YYYY-MM-DD HH:MM:SS" }`: Parses a specific date string. Supports RFC3339 and common naive formats.
+
+**Example:**
+
+```json
+[
+  {
+    "id": "user_1",
+    "name": "Alice",
+    "created_at": { "__fire_ts_from_date__": "2024-11-11T11:21:56Z" },
+    "updated_at": "__fire_ts_now__"
+  }
+]
 ```
 
-Output Example:
+## Troubleshooting
 
-```
-JSON Firestore Seed
-• Loading JSON from seed/users.json
-• Target collection: users (2 items)
-• Firestore project: my-cool-app-prod
-████████████████████████████████████████ 2/2 Done
-✓ Inserted 2 documents successfully
-```
+### "Authentication failed"
+-   Ensure your service account key is valid and has the `Cloud Datastore User` or `Firebase Firestore Admin` role.
+-   Verify the path to your credentials file using `--credentials`.
 
-## Notes
+### "Permission Denied"
+-   Check if the Project ID matches your Firestore instance.
+-   Ensure the service account has write access to the specific collection.
 
-- Documents get **auto-generated IDs**.
-- If you need `--id-field`, `--update`, or batch writes, open an issue or request enhancement.
+### "JSON must be an array"
+-   The root element of your JSON file must be a `[` (array). Individual objects are not supported as top-level elements.
 
-## How to Contribute
+## Contributing
 
-Simply folk this repo, but make sure to let us know and grant permission.
-
-## Contributors
-
-Thanks goes to these wonderful people ✨
-
-![Contributors](https://contrib.rocks/image?repo=shayyz-code/json-firestore-seed)
+1.  Fork the repository.
+2.  Create your feature branch (`git checkout -b feature/amazing-feature`).
+3.  Commit your changes (`git commit -m 'feat: add amazing feature'`).
+4.  Push to the branch (`git push origin feature/amazing-feature`).
+5.  Open a Pull Request.
 
 ## License
 

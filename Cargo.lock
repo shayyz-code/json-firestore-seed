@@ -1168,6 +1168,7 @@ dependencies = [
  "futures",
  "indicatif",
  "predicates",
+ "rand 0.10.1",
  "rustls",
  "serde",
  "serde_json",
