@@ -90,14 +90,23 @@ async fn run() -> Result<()> {
         format!("({} items)", items.len()).yellow()
     );
 
-    let db = FirestoreDb::with_options_service_account_key_file(
-        FirestoreDbOptions::new(args.project.clone()),
-        args.credentials.clone().into(),
-    )
-    .await
-    .map_err(|e| SeedError::AuthError(e.to_string()))?;
-
-    println!("{} {}", "• Firestore project:".bold(), args.project.cyan());
+    let db = if !args.dry_run {
+        let db = FirestoreDb::with_options_service_account_key_file(
+            FirestoreDbOptions::new(args.project.clone()),
+            args.credentials.clone().into(),
+        )
+        .await
+        .map_err(|e| SeedError::AuthError(e.to_string()))?;
+        println!("{} {}", "• Firestore project:".bold(), args.project.cyan());
+        Some(Arc::new(db))
+    } else {
+        println!(
+            "{} {}",
+            "• Dry Run mode:".bold().yellow(),
+            "Skipping Firestore authentication".dimmed()
+        );
+        None
+    };
 
     let bar = ProgressBar::new(items.len() as u64);
     bar.set_style(
@@ -109,7 +118,6 @@ async fn run() -> Result<()> {
     );
 
     let bar = Arc::new(bar);
-    let db = Arc::new(db);
     let args = Arc::new(args);
 
     let items = match data {
@@ -121,7 +129,7 @@ async fn run() -> Result<()> {
 
     let results = stream::iter(items.chunks(args.batch_size))
         .map(|chunk| {
-            let db = Arc::clone(&db);
+            let db = db.as_ref().map(Arc::clone);
             let bar = Arc::clone(&bar);
             let args = Arc::clone(&args);
             let chunk = chunk.to_vec();
@@ -143,6 +151,10 @@ async fn run() -> Result<()> {
                     }
                     return Ok(chunk_size);
                 }
+
+                let db = db.ok_or_else(|| {
+                    SeedError::ValidationError("Firestore DB not initialized".into())
+                })?;
 
                 let retry_strategy = ExponentialBackoff::from_millis(100)
                     .map(jitter)
