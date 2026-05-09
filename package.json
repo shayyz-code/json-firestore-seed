@@ -1,6 +1,6 @@
 {
   "name": "json-firestore-seed",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Seed Firestore with JSON data easily.",
   "bin": {
     "json-firestore-seed": "bin/json-firestore-seed"
