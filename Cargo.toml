@@ -1,6 +1,6 @@
 [package]
 name = "json-firestore-seed"
-version = "0.1.7"
+version = "0.1.8"
 edition = "2024"
 authors = ["Aung Min Khant <aungminkhant.shay@gmail.com>"]
 description = "A simple high-performance CLI tool to bulk-insert documents into Google Firestore from a JSON file."
