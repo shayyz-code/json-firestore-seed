@@ -7,13 +7,16 @@ before:
   hooks:
     - cargo --version
 
-rusts:
-  - targets:
+builds:
+  - id: json-firestore-seed
+    builder: rust
+    binary: json-firestore-seed
+    command: zigbuild
+    targets:
       - x86_64-unknown-linux-gnu
       - x86_64-apple-darwin
       - aarch64-apple-darwin
       - x86_64-pc-windows-msvc
-    bin: json-firestore-seed
 
 archives:
   - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
