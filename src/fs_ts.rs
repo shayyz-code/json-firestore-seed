@@ -127,10 +127,21 @@ mod tests {
 
     #[test]
     fn test_simple_types() {
-        assert!(matches!(json_to_firestore_value(&json!(null)).unwrap(), FirestoreValue::Null));
-        assert!(matches!(json_to_firestore_value(&json!(true)).unwrap(), FirestoreValue::Bool(true)));
-        assert!(matches!(json_to_firestore_value(&json!(42)).unwrap(), FirestoreValue::Number(_)));
-        assert!(matches!(json_to_firestore_value(&json!("hello")).unwrap(), FirestoreValue::String(s) if s == "hello"));
+        assert!(matches!(
+            json_to_firestore_value(&json!(null)).unwrap(),
+            FirestoreValue::Null
+        ));
+        assert!(matches!(
+            json_to_firestore_value(&json!(true)).unwrap(),
+            FirestoreValue::Bool(true)
+        ));
+        assert!(matches!(
+            json_to_firestore_value(&json!(42)).unwrap(),
+            FirestoreValue::Number(_)
+        ));
+        assert!(
+            matches!(json_to_firestore_value(&json!("hello")).unwrap(), FirestoreValue::String(s) if s == "hello")
+        );
     }
 
     #[test]
@@ -170,7 +181,10 @@ mod tests {
         let input = json!({ "__fire_ts_from_date__": "invalid date" });
         let result = json_to_firestore_value(&input);
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), SeedError::TimestampParse { .. }));
+        assert!(matches!(
+            result.unwrap_err(),
+            SeedError::TimestampParse { .. }
+        ));
     }
 
     #[test]
@@ -184,10 +198,19 @@ mod tests {
         });
         let val = json_to_firestore_value(&input).unwrap();
         if let FirestoreValue::Object(map) = val {
-            assert!(matches!(map.get("name").unwrap(), FirestoreValue::String(_)));
-            assert!(matches!(map.get("created_at").unwrap(), FirestoreValue::Timestamp(_)));
+            assert!(matches!(
+                map.get("name").unwrap(),
+                FirestoreValue::String(_)
+            ));
+            assert!(matches!(
+                map.get("created_at").unwrap(),
+                FirestoreValue::Timestamp(_)
+            ));
             if let FirestoreValue::Object(meta) = map.get("meta").unwrap() {
-                assert!(matches!(meta.get("updated_at").unwrap(), FirestoreValue::Timestamp(_)));
+                assert!(matches!(
+                    meta.get("updated_at").unwrap(),
+                    FirestoreValue::Timestamp(_)
+                ));
             } else {
                 panic!("Expected nested Object");
             }
