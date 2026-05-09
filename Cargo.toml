@@ -3,6 +3,13 @@ name = "json-firestore-seed"
 version = "0.1.7"
 edition = "2024"
 authors = ["Aung Min Khant <aungminkhant.shay@gmail.com>"]
+description = "A simple high-performance CLI tool to bulk-insert documents into Google Firestore from a JSON file."
+license = "MIT"
+repository = "https://github.com/shayyz-code/json-firestore-seed"
+homepage = "https://github.com/shayyz-code/json-firestore-seed"
+readme = "README.md"
+keywords = ["firestore", "seed", "json", "bulk-insert"]
+categories = ["command-line-utilities", "database"]
 
 [dependencies]
 clap = { version = "4.5.51", features = ["derive"] }

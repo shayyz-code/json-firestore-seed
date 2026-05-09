@@ -1,12 +1,21 @@
-![rust](https://img.shields.io/badge/rust-000000?logo=rust&logoColor=white&style=for-the-badge)
-![MIT](https://img.shields.io/badge/MIT-green?style=for-the-badge)
-![release](https://img.shields.io/github/v/release/shayyz-code/json-firestore-seed?style=for-the-badge)
+<h1 align="center">JSON Firestore Seed</h1>
 
-# JSON Firestore Seed
+<p align="center">
+  <a href="https://www.rust-lang.org">
+    <img src="https://img.shields.io/badge/rust-000000?logo=rust&logoColor=white&style=for-the-badge" alt="Rust" />
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/MIT-green?style=for-the-badge" alt="MIT" />
+  </a>
+  <a href="https://github.com/shayyz-code/json-firestore-seed/releases/latest">
+    <img src="https://img.shields.io/github/v/release/shayyz-code/json-firestore-seed?style=for-the-badge" alt="Release" />
+  </a>
+</p>
 
-A high-performance CLI tool to bulk-insert documents into **Google Firestore** from a **JSON file**.
-
-Useful for migrations, seeding test data, backups restore, data imports, and development workflows.
+<p align="center">
+  A high-performance CLI tool to bulk-insert documents into <b>Google Firestore</b> from a <b>JSON file</b>.
+  Useful for migrations, seeding test data, backups restore, data imports, and development workflows.
+</p>
 
 ## Features
 
@@ -21,10 +30,10 @@ Useful for migrations, seeding test data, backups restore, data imports, and dev
 
 ### Via Cargo (Recommended)
 
-If you have Rust installed, you can install directly from source:
+If you have Rust installed, you can install with cargo:
 
 ```bash
-cargo install --path .
+cargo install json-firestore-seed
 ```
 
 ### Via Homebrew
@@ -34,7 +43,7 @@ brew tap shayyz-code/tap
 brew install json-firestore-seed
 ```
 
-### Via NPM (Coming Soon)
+### Via NPM
 
 ```bash
 npm install -g json-firestore-seed
@@ -60,17 +69,17 @@ json-firestore-seed -j data.json -c users -p my-firestore-project
 
 ### Parameters
 
-| Flag | Long Form        | Default                                 | Description                                     |
-| ---- | ---------------- | --------------------------------------- | ----------------------------------------------- |
-| `-j` | `--json`         | (required)                              | Path to JSON file (must be an array)            |
-| `-c` | `--collection`   | (required)                              | Target Firestore collection name                |
-| `-p` | `--project`      | (required)                              | Google Cloud Project ID                         |
-| `-k` | `--credentials`  | `./application_default_credentials.json` | Path to service account JSON key file           |
-| `-i` | `--id-field`     | (auto-generate)                         | Field in JSON to use as document ID             |
-| `-d` | `--dry-run`      | `false`                                 | Preview transformations without writing         |
-| `-m` | `--concurrency`  | `4`                                     | Number of parallel write tasks                  |
-| `-r` | `--retries`      | `3`                                     | Number of retries for failed writes             |
-| `-b` | `--batch-size`   | `1`                                     | Items per Firestore batch (max 500)             |
+| Flag | Long Form       | Default                                  | Description                             |
+| ---- | --------------- | ---------------------------------------- | --------------------------------------- |
+| `-j` | `--json`        | (required)                               | Path to JSON file (must be an array)    |
+| `-c` | `--collection`  | (required)                               | Target Firestore collection name        |
+| `-p` | `--project`     | (required)                               | Google Cloud Project ID                 |
+| `-k` | `--credentials` | `./application_default_credentials.json` | Path to service account JSON key file   |
+| `-i` | `--id-field`    | (auto-generate)                          | Field in JSON to use as document ID     |
+| `-d` | `--dry-run`     | `false`                                  | Preview transformations without writing |
+| `-m` | `--concurrency` | `4`                                      | Number of parallel write tasks          |
+| `-r` | `--retries`     | `3`                                      | Number of retries for failed writes     |
+| `-b` | `--batch-size`  | `1`                                      | Items per Firestore batch (max 500)     |
 
 ## JSON Format & Timestamps
 
@@ -78,34 +87,37 @@ The input JSON must be an array of objects.
 
 ### Firestore Timestamp Markers
 
--   `__fire_ts_now__`: Sets the field to the current server time.
--   `{ "__fire_ts_from_date__": "YYYY-MM-DD HH:MM:SS" }`: Parses a specific date string. Supports RFC3339 and common naive formats.
+- `__fire_ts_now__`: Sets the field to the current server time.
+- `{ "__fire_ts_from_date__": "YYYY-MM-DD HH:MM:SS" }`: Parses a specific date string. Supports RFC3339 and common naive formats.
 
 **Example:**
 
 ```json
 [
-  {
-    "id": "user_1",
-    "name": "Alice",
-    "created_at": { "__fire_ts_from_date__": "2024-11-11T11:21:56Z" },
-    "updated_at": "__fire_ts_now__"
-  }
+    {
+        "id": "user_1",
+        "name": "Alice",
+        "created_at": { "__fire_ts_from_date__": "2024-11-11T11:21:56Z" },
+        "updated_at": "__fire_ts_now__"
+    }
 ]
 ```
 
 ## Troubleshooting
 
 ### "Authentication failed"
--   Ensure your service account key is valid and has the `Cloud Datastore User` or `Firebase Firestore Admin` role.
--   Verify the path to your credentials file using `--credentials`.
+
+- Ensure your service account key is valid and has the `Cloud Datastore User` or `Firebase Firestore Admin` role.
+- Verify the path to your credentials file using `--credentials`.
 
 ### "Permission Denied"
--   Check if the Project ID matches your Firestore instance.
--   Ensure the service account has write access to the specific collection.
+
+- Check if the Project ID matches your Firestore instance.
+- Ensure the service account has write access to the specific collection.
 
 ### "JSON must be an array"
--   The root element of your JSON file must be a `[` (array). Individual objects are not supported as top-level elements.
+
+- The root element of your JSON file must be a `[` (array). Individual objects are not supported as top-level elements.
 
 ## Contributing
 
