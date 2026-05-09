@@ -46,7 +46,10 @@ brews:
       owner: shayyz-code
       name: homebrew-tap
     directory: Formula
-    homepage: "https://github.com/{{ .Env.GITHUB_REPOSITORY }}"
+    homepage: "https://github.com/shayyz-code/json-firestore-seed"
     description: "Seed Firestore with JSON data easily."
+    license: "MIT"
     install: |
       bin.install "json-firestore-seed"
+    test: |
+      system "#{bin}/json-firestore-seed --version"

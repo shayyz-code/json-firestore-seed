@@ -27,7 +27,7 @@ If you have Rust installed, you can install directly from source:
 cargo install --path .
 ```
 
-### Via Homebrew (Coming Soon)
+### Via Homebrew
 
 ```bash
 brew tap shayyz-code/tap
