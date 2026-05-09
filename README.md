@@ -116,13 +116,14 @@ The input JSON must be an array of objects.
 ## Contributing
 
 1.  Fork the repository.
-2.  Create your feature branch (`git checkout -b feature/amazing-feature`).
-3.  Commit your changes (`git commit -m 'feat: add amazing feature'`).
-4.  Push to the branch (`git push origin feature/amazing-feature`).
-5.  Open a Pull Request.
+2.  Read the [CONTRIBUTING.md](CONTRIBUTING.md) guide.
+3.  Create your feature branch (`git checkout -b feature/amazing-feature`).
+4.  Commit your changes (`git commit -m 'feat: add amazing feature'`).
+5.  Push to the branch (`git push origin feature/amazing-feature`).
+6.  Open a Pull Request.
 
 ## License
 
-MIT License — free for personal & commercial use.
+This project is licensed under the [MIT License](LICENSE) — free for personal & commercial use.
 
 Copyright (c) 2025 shayyz-code.
